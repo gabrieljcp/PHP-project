@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20-Abr-2022 às 01:35
--- Versão do servidor: 10.4.11-MariaDB
--- versão do PHP: 7.4.2
+-- Tempo de geração: 04-Maio-2022 às 02:14
+-- Versão do servidor: 10.4.22-MariaDB
+-- versão do PHP: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -30,8 +29,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `atendente` (
   `id_atendente` int(10) UNSIGNED NOT NULL,
-  `nome_atendente` varchar(45) DEFAULT NULL
+  `nome_atendente` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `atendente`
+--
+
+INSERT INTO `atendente` (`id_atendente`, `nome_atendente`) VALUES
+(1, 'Maria'),
+(2, 'João'),
+(3, 'Paulo');
 
 -- --------------------------------------------------------
 
@@ -51,8 +59,8 @@ CREATE TABLE `categoria` (
 --
 
 CREATE TABLE `emprestimo` (
-  `usuario_id_usuario` int(10) UNSIGNED NOT NULL,
   `livro_id_livro` int(10) UNSIGNED NOT NULL,
+  `usuario_id_usuario` int(10) UNSIGNED NOT NULL,
   `atendente_id_atendente` int(10) UNSIGNED NOT NULL,
   `data_emprestimo` date DEFAULT NULL,
   `devolucao_emprestimo` date DEFAULT NULL
@@ -66,13 +74,13 @@ CREATE TABLE `emprestimo` (
 
 CREATE TABLE `livro` (
   `id_livro` int(10) UNSIGNED NOT NULL,
+  `categoria_id_categoria` int(10) UNSIGNED NOT NULL,
   `titulo_livro` varchar(45) DEFAULT NULL,
   `autor_livro` varchar(45) DEFAULT NULL,
   `editora_livro` varchar(45) DEFAULT NULL,
-  `edicao_livro` char(4) DEFAULT NULL,
+  `edicao_livro` char(3) DEFAULT NULL,
   `ano_livro` year(4) DEFAULT NULL,
-  `localidade_livro` varchar(45) DEFAULT NULL,
-  `categoria_id_categoria` int(10) UNSIGNED NOT NULL
+  `localidade_livro` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -83,12 +91,20 @@ CREATE TABLE `livro` (
 
 CREATE TABLE `usuario` (
   `id_usuario` int(10) UNSIGNED NOT NULL,
-  `nome_usuario` varchar(45) DEFAULT NULL,
-  `email_usuario` varchar(45) DEFAULT NULL,
-  `telefone_usuario` varchar(45) DEFAULT NULL,
+  `nome_usuario` varchar(255) DEFAULT NULL,
+  `email_usuario` varchar(255) DEFAULT NULL,
+  `telefone_usuario` varchar(20) DEFAULT NULL,
   `data_nasc_usuario` date DEFAULT NULL,
-  `cpf_usuario` varchar(45) DEFAULT NULL
+  `cpf_usuario` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Extraindo dados da tabela `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `nome_usuario`, `email_usuario`, `telefone_usuario`, `data_nasc_usuario`, `cpf_usuario`) VALUES
+(1, 'Eliel', 'elielkruz@gmail.com', '61982088252', '1984-01-07', '8906786567'),
+(2, 'Maria', 'maria@gmail.com', '789789797', '2023-06-04', '56757575');
 
 --
 -- Índices para tabelas despejadas
@@ -110,17 +126,17 @@ ALTER TABLE `categoria`
 -- Índices para tabela `emprestimo`
 --
 ALTER TABLE `emprestimo`
-  ADD PRIMARY KEY (`usuario_id_usuario`,`livro_id_livro`,`atendente_id_atendente`),
-  ADD KEY `fk_usuario_has_livro_livro1_idx` (`livro_id_livro`),
-  ADD KEY `fk_usuario_has_livro_usuario_idx` (`usuario_id_usuario`),
-  ADD KEY `fk_emprestimo_atendente1_idx` (`atendente_id_atendente`);
+  ADD PRIMARY KEY (`livro_id_livro`,`usuario_id_usuario`),
+  ADD KEY `livro_has_usuario_FKIndex1` (`livro_id_livro`),
+  ADD KEY `livro_has_usuario_FKIndex2` (`usuario_id_usuario`),
+  ADD KEY `emprestimo_FKIndex3` (`atendente_id_atendente`);
 
 --
 -- Índices para tabela `livro`
 --
 ALTER TABLE `livro`
-  ADD PRIMARY KEY (`id_livro`,`categoria_id_categoria`),
-  ADD KEY `fk_livro_categoria1_idx` (`categoria_id_categoria`);
+  ADD PRIMARY KEY (`id_livro`),
+  ADD KEY `livro_FKIndex1` (`categoria_id_categoria`);
 
 --
 -- Índices para tabela `usuario`
@@ -129,22 +145,32 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`);
 
 --
--- Restrições para despejos de tabelas
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `emprestimo`
+-- AUTO_INCREMENT de tabela `atendente`
 --
-ALTER TABLE `emprestimo`
-  ADD CONSTRAINT `fk_emprestimo_atendente1` FOREIGN KEY (`atendente_id_atendente`) REFERENCES `atendente` (`id_atendente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_usuario_has_livro_livro1` FOREIGN KEY (`livro_id_livro`) REFERENCES `livro` (`id_livro`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_usuario_has_livro_usuario` FOREIGN KEY (`usuario_id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `atendente`
+  MODIFY `id_atendente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Limitadores para a tabela `livro`
+-- AUTO_INCREMENT de tabela `categoria`
+--
+ALTER TABLE `categoria`
+  MODIFY `id_categoria` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `livro`
 --
 ALTER TABLE `livro`
-  ADD CONSTRAINT `fk_livro_categoria1` FOREIGN KEY (`categoria_id_categoria`) REFERENCES `categoria` (`id_categoria`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  MODIFY `id_livro` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
