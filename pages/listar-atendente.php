@@ -11,11 +11,18 @@
 		print "<tr>";
 		print "<th>#</th>";
 		print "<th>Nome do Atendente</th>";
+		print "<th>Ações</th>";
 		print "</tr>";
 		while($row = $res->fetch_object()){
 			print "<tr>";
 			print "<td>".$row->id_atendente."</td>";
 			print "<td>".$row->nome_atendente."</td>";
+			print "<td>
+					 <button onclick=\"location.href='?page=editar-atendente&id_atendente=".$row->id_atendente."';\" class='btn btn-success'>Editar</button>
+
+					 <button onclick=\"if(confirm('Tem certeza que deseja excluir?')){location.href='?page=salvar-atendente&acao=excluir&id_atendente=".$row->id_atendente."';}else{false;}\" class='btn btn-danger'>Excluir</button>
+
+				   </td>";
 			print "</tr>";
 		}
 		print "</table>";
