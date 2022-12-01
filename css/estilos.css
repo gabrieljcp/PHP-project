@@ -1,0 +1,18 @@
+body {
+    background: url('../imagens/biblioteca.jpg');
+}
+
+form {
+    background-color: white;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+table {
+    background-color: white;
+}
+
+h1, p {
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+}
